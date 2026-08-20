@@ -18,6 +18,7 @@ aws_credentials*
 .idea/
 .DS_Store
 Thumbs.db
+*.claude
 
 # Local build artifacts
 *.tar.gz

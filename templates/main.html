@@ -10,13 +10,11 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <!-- loading overlay shown while a form submit reloads the page -->
   <div class="overlay-load" id="loading" aria-hidden="true">
     <div class="spinner"></div>
     <p>Loading&hellip;</p>
   </div>
 
-  <!-- 5.1 user area -->
   <header class="topbar">
     <div class="user">
       <span class="avatar">{{ user_name[:1]|upper }}</span>
@@ -27,33 +25,38 @@
 
   <main class="container">
 
-    <!-- 5.2 Subscription area -->
     <section class="panel">
-      <h2 class="sec-title">Your Subscriptions</h2>
-      {% if subscriptions %}
-        {% for s in subscriptions %}
-          <div class="music-item">
-            <img class="cover" src="{{ s.image }}" alt="cover" loading="lazy">
-            <div class="meta">
-              <div class="title">{{ s.title }}</div>
-              <div class="desc">{{ s.artist }} &middot; {{ s.year }}</div>
-            </div>
-            <!-- 5.2.3 Remove -->
-            <form method="post" action="{{ url_for('remove') }}">
-              <input type="hidden" name="title" value="{{ s.title }}">
-              <button type="submit" class="btn btn-remove">Remove</button>
-            </form>
-          </div>
-        {% endfor %}
-      {% else %}
-        <p class="msg">You have no subscriptions yet. Browse or search below to add some.</p>
-      {% endif %}
+      <details class="collapsible" open>
+        <summary class="sec-title">
+          Your Subscriptions
+          <span class="count">{{ subscriptions|length }}</span>
+          <span class="chevron" aria-hidden="true">&#9662;</span>
+        </summary>
+        <div class="collapsible-body">
+          {% if subscriptions %}
+            {% for s in subscriptions %}
+              <div class="music-item">
+                <img class="cover" src="{{ s.image }}" alt="cover" loading="lazy">
+                <div class="meta">
+                  <div class="title">{{ s.title }}</div>
+                  <div class="desc">{{ s.artist }} &middot; {{ s.year }}</div>
+                </div>
+                <form method="post" action="{{ url_for('remove') }}">
+                  <input type="hidden" name="title" value="{{ s.title }}">
+                  <button type="submit" class="btn btn-remove">Remove</button>
+                </form>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="msg">You have no subscriptions yet. Browse or search below to add some.</p>
+          {% endif %}
+        </div>
+      </details>
     </section>
 
-    <!-- 5.3 Query area -->
     <section class="panel">
       <h2 class="sec-title">Find Music</h2>
-      <form method="post" action="{{ url_for('query') }}">
+      <form method="get" action="{{ url_for('main') }}">
         <div class="query">
           <div class="field">
             <label for="title">Title</label>
@@ -71,12 +74,15 @@
         </div>
       </form>
 
+      {% if is_query %}
+        <p class="browse-hint"><a class="show-all" href="{{ url_for('main') }}">&larr; Show all songs</a></p>
+      {% endif %}
+
       {% if query_message %}
-        <p class="msg">{{ query_message }}</p>                    {# 5.3.1 no result #}
+        <p class="msg">{{ query_message }}</p>
       {% else %}
-        {% set songs = results if results is not none else browse %}
         <p class="browse-hint">
-          {% if results is not none %}
+          {% if is_query %}
             Showing {{ songs|length }} of {{ total_songs }} track{{ '' if total_songs == 1 else 's' }}
           {% else %}
             Showing all {{ total_songs }} tracks &mdash; search above to narrow down
@@ -85,12 +91,11 @@
         <div class="results">
           {% for s in songs %}
             <div class="music-item">
-              <img class="cover" src="{{ s.image }}" alt="cover" loading="lazy">   {# 5.3.2.2 image #}
+              <img class="cover" src="{{ s.image }}" alt="cover" loading="lazy">
               <div class="meta">
-                <div class="title">{{ s.title }}</div>                            {# 5.3.2.1 info #}
+                <div class="title">{{ s.title }}</div>
                 <div class="desc">{{ s.artist }} &middot; {{ s.year }}</div>
               </div>
-              <!-- 5.3.2.3 Subscribe -->
               <form method="post" action="{{ url_for('subscribe') }}">
                 <input type="hidden" name="title"  value="{{ s.title }}">
                 <input type="hidden" name="artist" value="{{ s.artist }}">
@@ -107,12 +112,12 @@
   </main>
 
   <script>
-    // Show the loading overlay when any form is submitted (page will reload).
+    // show the loading overlay on any form submit
     const ov = document.getElementById('loading');
     document.querySelectorAll('form').forEach(function (f) {
       f.addEventListener('submit', function () { ov.classList.add('show'); });
     });
-    // Fade the skeleton shimmer off each cover once its image finishes loading.
+    // drop the shimmer once each cover has loaded
     document.querySelectorAll('img.cover').forEach(function (img) {
       if (img.complete) { img.classList.add('loaded'); }
       else {
