@@ -53,3 +53,14 @@ Public flow:  Browser :80  ->  Apache  ->  gunicorn 127.0.0.1:8000  ->  Flask
     sudo systemctl status music apache2
     sudo journalctl -u music -n 50 --no-pager     # app logs
     sudo tail -n 50 /var/log/apache2/music_error.log
+
+## 10. (Optional) HTTPS with a self-signed cert
+    sudo a2enmod ssl
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+      -keyout /etc/ssl/private/music-selfsigned.key \
+      -out /etc/ssl/certs/music-selfsigned.crt -subj "/CN=music-app"
+    sudo cp deploy/music-ssl.conf /etc/apache2/sites-available/music-ssl.conf
+    sudo a2ensite music-ssl
+    sudo systemctl restart apache2
+    # then open port 443 (HTTPS) in the security group
+    # self-signed -> browser shows "not private" -> Advanced -> Proceed
