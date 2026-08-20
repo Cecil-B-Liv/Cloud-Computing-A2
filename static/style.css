@@ -1,0 +1,193 @@
+/* ==========================================================================
+   Music Subscription -- "Midnight" theme (dark, tangerine accent).
+   Single committed look; every colour painted explicitly.
+   ========================================================================== */
+:root{
+  --bg:#08090F; --panel:#0F1018; --surface:#171826; --surface-2:#1E2032;
+  --text:#F0F1F8; --muted:#9698B2; --line:#282A3C;
+  --accent:#FF6A3D; --accent-2:#FFC24B; --accent-ink:#180B06; --danger:#FF5C7A;
+  --radius:14px;
+}
+*{ box-sizing:border-box; }
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:"Inter",system-ui,-apple-system,sans-serif; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{ color:var(--accent); text-decoration:none; }
+a:hover{ text-decoration:underline; }
+
+/* ==========================================================================
+   AUTH (login / register) -- split screen: vinyl left, form right
+   ========================================================================== */
+.auth{
+  display:grid; grid-template-columns:1fr 1.02fr; min-height:100vh;
+}
+.form-pane{
+  padding:48px 46px; display:flex; flex-direction:column; justify-content:center;
+  background:var(--panel); max-width:520px; width:100%; margin:0 auto;
+}
+.brand{ display:flex; align-items:center; gap:11px; margin-bottom:34px; }
+.brand .logo{
+  width:34px; height:34px; border-radius:9px; display:grid; place-items:center;
+  background:var(--accent); color:var(--accent-ink); font-size:18px;
+}
+.brand .wm{ font-family:"Sora",sans-serif; font-weight:700; font-size:1.2rem; letter-spacing:-.01em; }
+.form-pane h1{
+  font-family:"Sora",sans-serif; font-weight:700; font-size:2rem; margin:0 0 6px; letter-spacing:-.015em;
+}
+.form-pane .sub{ color:var(--muted); margin:0 0 24px; font-size:.95rem; }
+
+label{
+  display:block; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--muted); font-weight:600; margin:16px 0 7px;
+}
+input[type=text], input[type=password]{
+  width:100%; background:var(--surface); color:var(--text); border:1px solid var(--line);
+  border-radius:10px; padding:12px 13px; font-size:.94rem; font-family:inherit;
+}
+input::placeholder{ color:var(--muted); opacity:.6; }
+input:focus{ outline:none; border-color:var(--accent); }
+
+.cta{
+  margin-top:24px; width:100%; border:none; cursor:pointer;
+  background:var(--accent); color:var(--accent-ink); border-radius:11px; padding:13px;
+  font-family:"Sora",sans-serif; font-weight:700; font-size:1rem;
+}
+.cta:hover{ filter:brightness(1.06); }
+.altline{ text-align:center; margin-top:18px; font-size:.9rem; color:var(--muted); }
+
+.error{
+  background:rgba(255,92,122,.12); color:#FF8FA3; border:1px solid rgba(255,92,122,.35);
+  padding:10px 13px; border-radius:10px; margin-bottom:6px; font-size:.9rem;
+}
+
+/* --- image half: spinning vinyl --- */
+.img-pane{
+  position:relative; overflow:hidden; display:grid; place-items:center;
+  background:radial-gradient(120% 120% at 50% 20%,#1A1330 0%,#0A0B12 60%);
+}
+.v-glow{
+  position:absolute; width:420px; height:420px; border-radius:50%; top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle, var(--accent) 0%, transparent 62%); opacity:.30; filter:blur(36px);
+}
+.disc{
+  width:320px; height:320px; border-radius:50%; position:relative; z-index:1;
+  background:
+    radial-gradient(circle at 50% 50%, var(--accent) 0 12%, #1a1622 12.5% 13.5%, transparent 14%),
+    repeating-radial-gradient(circle at 50% 50%, #141018 0 3px, #0c0a12 3px 6px);
+  box-shadow:0 30px 70px rgba(0,0,0,.6), inset 0 0 0 2px rgba(255,255,255,.04);
+  animation:spin 9s linear infinite;
+}
+.disc::before{
+  content:""; position:absolute; top:50%; left:50%; width:10px; height:10px; border-radius:50%;
+  background:#0A0B12; transform:translate(-50%,-50%); z-index:2;
+}
+.disc::after{
+  content:""; position:absolute; inset:0; border-radius:50%;
+  background:conic-gradient(from 0deg, rgba(255,255,255,.10), transparent 25%, transparent 75%, rgba(255,255,255,.10));
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.caption{ position:absolute; left:36px; right:36px; bottom:34px; z-index:2; }
+.caption h2{
+  font-family:"Sora",sans-serif; font-weight:800; font-size:1.8rem; line-height:1.1;
+  margin:0 0 8px; letter-spacing:-.02em;
+}
+.caption p{ margin:0; color:#C9CBDA; font-size:.92rem; }
+
+/* stack on small screens: vinyl becomes a slim banner on top */
+@media (max-width:760px){
+  .auth{ grid-template-columns:1fr; }
+  .img-pane{ min-height:220px; order:-1; }
+  .disc{ width:150px; height:150px; }
+  .caption{ display:none; }
+  .form-pane{ padding:34px 24px; }
+}
+
+/* ==========================================================================
+   MAIN PAGE
+   ========================================================================== */
+.topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 28px; background:var(--panel); border-bottom:1px solid var(--line);
+  position:sticky; top:0; z-index:5;
+}
+.topbar .user{ display:flex; align-items:center; gap:11px; }
+.avatar{
+  width:34px; height:34px; border-radius:50%; flex:none; background:var(--accent);
+  color:var(--accent-ink); display:grid; place-items:center; font-weight:700;
+  font-family:"Sora",sans-serif; font-size:.95rem;
+}
+.topbar .user b{ font-size:.98rem; }
+.logout{ color:var(--muted); font-size:.9rem; }
+.logout:hover{ color:var(--text); text-decoration:none; }
+
+.container{ max-width:960px; margin:26px auto; padding:0 20px; }
+.panel{
+  background:var(--panel); border:1px solid var(--line); border-radius:16px;
+  padding:22px 24px; margin-bottom:22px;
+}
+.sec-title{
+  font-family:"Sora",sans-serif; font-weight:700; font-size:1.15rem; margin:0 0 16px;
+  display:flex; align-items:center; gap:10px;
+}
+.sec-title::before{ content:""; width:4px; height:18px; border-radius:3px; background:var(--accent); }
+
+.music-item{
+  display:flex; align-items:center; gap:14px; padding:11px 0; border-bottom:1px solid var(--line);
+}
+.music-item:last-child{ border-bottom:none; }
+.cover{
+  width:58px; height:58px; border-radius:10px; object-fit:cover; flex:none;
+  box-shadow:0 4px 12px rgba(0,0,0,.35);
+  /* skeleton shimmer shown until the image finishes loading */
+  background:linear-gradient(100deg,#171826 30%,#23253d 50%,#171826 70%);
+  background-size:200% 100%; animation:shimmer 1.25s linear infinite;
+}
+.cover.loaded{ animation:none; background:var(--surface); }
+@keyframes shimmer{ to{ background-position:-200% 0; } }
+.music-item .meta{ flex:1; min-width:0; }
+.music-item .meta .title{ font-weight:700; font-size:.96rem; overflow-wrap:anywhere; }
+.music-item .meta .desc{ color:var(--muted); font-size:.84rem; overflow-wrap:anywhere; }
+
+.btn{
+  border:none; cursor:pointer; font-family:"Inter",sans-serif; font-weight:600;
+  font-size:.82rem; padding:8px 16px; border-radius:100px;
+}
+.btn-sub{ background:var(--accent); color:var(--accent-ink); }
+.btn-sub:hover{ filter:brightness(1.06); }
+.btn-remove{ background:transparent; color:var(--danger); border:1px solid var(--danger); }
+.btn-remove:hover{ background:rgba(255,92,122,.12); }
+
+/* query row */
+.query{ display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+.query .field{ flex:1; min-width:150px; }
+.query .field label{ margin-top:0; }
+.query .btn-query{
+  border:none; cursor:pointer; background:var(--accent); color:var(--accent-ink);
+  font-family:"Sora",sans-serif; font-weight:700; font-size:.9rem;
+  padding:12px 24px; border-radius:10px;
+}
+.query .btn-query:hover{ filter:brightness(1.06); }
+
+.results{ margin-top:8px; }
+.msg{ color:var(--muted); font-style:italic; margin:14px 0 2px; }
+.browse-hint{ color:var(--muted); font-size:.85rem; margin:16px 0 8px; }
+
+/* loading overlay + spinner */
+.overlay-load{
+  position:fixed; inset:0; z-index:60; display:none;
+  flex-direction:column; align-items:center; justify-content:center; gap:14px;
+  background:rgba(8,9,15,.74);
+}
+.overlay-load.show{ display:flex; }
+.overlay-load p{ color:var(--muted); font-size:.9rem; margin:0; }
+.spinner{
+  width:48px; height:48px; border-radius:50%;
+  border:4px solid rgba(255,255,255,.14); border-top-color:var(--accent);
+  animation:spin .8s linear infinite;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+@media (prefers-reduced-motion:reduce){ .disc{ animation:none; } }

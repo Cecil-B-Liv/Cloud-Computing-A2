@@ -1,0 +1,12 @@
+# Web framework (runs the app + templates)
+Flask>=3.0
+
+# AWS SDK for Python (talks to DynamoDB and S3)
+boto3>=1.34
+
+# Used by the image-uploader script to download images over HTTP
+requests>=2.31
+
+# Production WSGI server used ONLY on EC2 (Apache proxies to it).
+# Installs on Windows but does not RUN there — locally we use `python app.py`.
+gunicorn>=21.2

@@ -1,0 +1,24 @@
+# Python virtual environment (Windows binaries; the Mac/EC2 build their own)
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# --- SECRETS: never commit these ---
+*.pem
+*.ppk
+.env
+.aws/
+credentials
+aws_credentials*
+
+# Editor / OS junk
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local build artifacts
+*.tar.gz
+*.zip
