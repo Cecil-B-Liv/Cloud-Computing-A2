@@ -112,7 +112,7 @@ def register():
 def main():
     # search comes in as GET params; blank = show everything
     title = request.args.get("title", "").strip()
-    year = request.args.get("year", "").strip()
+    year = request.args.get("ye ar", "").strip()
     artist = request.args.get("artist", "").strip()
     is_query = bool(title or year or artist)
 
